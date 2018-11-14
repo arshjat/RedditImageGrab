@@ -3,7 +3,7 @@
 # RedditImageGrab
 
 ## This repository is a fork of HoverHell/RedditImageGrab which aims at enforcing the compatibility to Python 3 with necessary  code changes. 
-### Arsh Panghal
+### ~ Arsh Panghal
 
 I created this script to download the latest (and greatest) wallpapers
 off of image subreddits like wallpaper to keep my desktop wallpaper
