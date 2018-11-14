@@ -5,11 +5,11 @@ from __future__ import print_function
 
 import os
 import re
-import StringIO
+from io import StringIO
 import sys
 import logging
-from urllib2 import urlopen, HTTPError, URLError
-from httplib import InvalidURL
+from urllib.request import urlopen, HTTPError, URLError
+from http.client import InvalidURL
 from argparse import ArgumentParser
 from os.path import (
     exists as pathexists, join as pathjoin, basename as pathbasename,
@@ -29,7 +29,7 @@ def request(url, *ar, **kwa):
     _retries = kwa.pop('_retries', 4)
     _retry_pause = kwa.pop('_retry_pause', 0)
     res = None
-    for _try in xrange(_retries):
+    for _try in range(_retries):
         try:
             res = urlopen(url, *ar, **kwa)
         except Exception as exc:
@@ -83,7 +83,7 @@ def extract_imgur_album_urls(album_url):
     match = re.compile(r'\"hash\":\"(.[^\"]*)\",\"title\"')
     items = []
 
-    memfile = StringIO.StringIO(filedata)
+    memfile = StringIO(filedata)
 
     for line in memfile.readlines():
         results = re.findall(match, line)

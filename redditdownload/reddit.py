@@ -2,9 +2,11 @@
 """Return list of items from a sub-reddit of reddit.com."""
 
 import sys
-import HTMLParser
-from urllib2 import urlopen, Request, HTTPError
+from html.parser import HTMLParser
+from urllib.request import urlopen, Request, HTTPError
 from json import JSONDecoder
+import requests
+import json
 
 
 def getitems(subreddit, multireddit=False, previd='', reddit_sort=None):
@@ -33,7 +35,7 @@ def getitems(subreddit, multireddit=False, previd='', reddit_sort=None):
         if '/m/' not in subreddit:
             warning = ('That doesn\'t look like a multireddit. Are you sure'
                        'you need that multireddit flag?')
-            print warning
+            print(warning)
             sys.exit(1)
         url = 'http://www.reddit.com/user/%s.json' % subreddit
     if not multireddit:
@@ -41,7 +43,7 @@ def getitems(subreddit, multireddit=False, previd='', reddit_sort=None):
             warning = ('It looks like you are trying to fetch a multireddit. \n'
                        'Check the multireddit flag. '
                        'Call --help for more info')
-            print warning
+            print(warning)
             sys.exit(1)
         # no sorting needed
         if reddit_sort is None:
@@ -94,9 +96,9 @@ def getitems(subreddit, multireddit=False, previd='', reddit_sort=None):
             url += 'sort={}&t={}'.format(sort_type, sort_time_limit)
 
     try:
-        req = Request(url, headers=hdr)
-        json = urlopen(req).read()
-        data = JSONDecoder().decode(json)
+        req = requests.get(url, headers=hdr)
+        json1 = json.dumps(req.json())
+        data =JSONDecoder().decode(json1)
         if isinstance(data, dict):
             items = [x['data'] for x in data['data']['children']]
         elif isinstance(data, list):
@@ -119,7 +121,7 @@ def getitems(subreddit, multireddit=False, previd='', reddit_sort=None):
     # returns `url` values html-escaped, whereas we normally need them
     # in the way they are meant to be downloaded (i.e. urlquoted at
     # most).
-    htmlparser = HTMLParser.HTMLParser()
+    htmlparser = HTMLParser()
     for item in items:
         if item.get('url'):
             item['url'] = htmlparser.unescape(item['url'])
